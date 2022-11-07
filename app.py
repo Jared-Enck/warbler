@@ -213,7 +213,7 @@ def stop_following(follow_id):
     return redirect(f"/users/{g.user.id}/following")
 
 
-@app.route('/users/<int:user_id>/profile', methods=["GET", "POST"])
+@app.route('/users/<int:user_id>/edit', methods=["GET", "POST"])
 def profile(user_id):
     """Update profile for current user."""
 
@@ -226,20 +226,24 @@ def profile(user_id):
         return redirect("/")
     
     if form.validate_on_submit():
-        user.username = form.username.data
-        user.email = form.email.data
-        user.image_url = form.image_url.data
-        user.header_image_url = form.header_image_url.data
-        user.bio = form.bio.data
+        user = User.authenticate(form.username.data,
+                                form.password.data)
+        if user:
+            user.username = form.username.data
+            user.email = form.email.data
+            user.image_url = form.image_url.data
+            user.header_image_url = form.header_image_url.data
+            user.bio = form.bio.data
+            
+            db.session.commit()
+            
+            flash(f"Saved {user.username}'s new info.", 'success')
+            
+            return redirect(f'/users/{user_id}')
         
-        db.session.commit()
-        
-        flash(f"Saved {user.username}'s new info.", 'success')
-        
-        return redirect(f'/users/{user_id}')
-        
+        flash("Invalid credentials.", 'danger') 
     
-    return render_template('users/edit.html', form=form)
+    return render_template('users/edit.html', form=form, user=user)
 
 
 @app.route('/users/delete', methods=["POST"])
