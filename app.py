@@ -226,7 +226,7 @@ def profile(user_id):
         return redirect("/")
     
     if form.validate_on_submit():
-        user = User.authenticate(form.username.data,
+        user = User.authenticate(user.username,
                                 form.password.data)
         if user:
             user.username = form.username.data
