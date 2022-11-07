@@ -241,7 +241,8 @@ def profile(user_id):
             
             return redirect(f'/users/{user_id}')
         
-        flash("Invalid credentials.", 'danger') 
+        flash("Invalid credentials.", 'danger')
+        return redirect('/') 
     
     return render_template('users/edit.html', form=form, user=user)
 
