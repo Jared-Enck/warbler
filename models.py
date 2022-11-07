@@ -83,10 +83,12 @@ class User(db.Model):
 
     bio = db.Column(
         db.Text,
+        default='Edit profile to enter a bio.'
     )
 
     location = db.Column(
         db.Text,
+        default='No location set.'
     )
 
     password = db.Column(

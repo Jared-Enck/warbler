@@ -51,8 +51,6 @@ def do_logout():
 
     if CURR_USER_KEY in session:
         del session[CURR_USER_KEY]
-        
-    return flash('Successfully logged out.', 'info')
 
 
 @app.route('/signup', methods=["GET", "POST"])
@@ -118,6 +116,8 @@ def logout():
     # IMPLEMENT THIS
     
     do_logout()
+    
+    flash('Successfully logged out.', 'info')
         
     return redirect('/login')
 
@@ -232,6 +232,8 @@ def delete_user():
 
     db.session.delete(g.user)
     db.session.commit()
+    
+    flash('Deleted your account.', 'info')
 
     return redirect("/signup")
 
