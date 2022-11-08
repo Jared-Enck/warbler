@@ -324,7 +324,7 @@ def add_like(msg_id):
     liked_message = Message.query.get_or_404(msg_id)
     
     if liked_message.user_id == g.user.id:
-            return abort(403)
+            return redirect('/')
     
     user_likes = g.user.likes
     
@@ -332,8 +332,6 @@ def add_like(msg_id):
         g.user.likes = [like for like in user_likes if like != liked_message]
     else:
         g.user.likes.append(liked_message)
-    
-    user_likes.append(liked_message)
     
     db.session.commit()
     
@@ -362,7 +360,9 @@ def homepage():
                     .limit(100)
                     .all())
         
-        return render_template('home.html', messages=messages)
+        liked_msg_ids = [msg.id for msg in g.user.likes]
+        
+        return render_template('home.html', messages=messages, likes=liked_msg_ids)
 
     else:
         return render_template('home-anon.html')
