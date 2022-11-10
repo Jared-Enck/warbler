@@ -51,7 +51,7 @@ def do_logout():
 
     if CURR_USER_KEY in session:
         del session[CURR_USER_KEY]
-
+        
 
 @app.route('/signup', methods=["GET", "POST"])
 def signup():
@@ -141,13 +141,15 @@ def list_users():
 
     return render_template('users/index.html', users=users)
 
-
 @app.route('/users/<int:user_id>')
 def users_show(user_id):
     """Show user profile."""
 
     user = User.query.get_or_404(user_id)
 
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
     # snagging messages in order from the database;
     # user.messages won't be in order by default
     messages = (Message
